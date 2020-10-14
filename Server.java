@@ -3,7 +3,7 @@ import java.net.DatagramSocket;
 public class Server implements Runnable{
 	public void run() {
 		try {
-		DatagramSocket link = new DatagramSocket(1234);
+		DatagramSocket link = new DatagramSocket(5555);
 		byte[] receiveBuffer = new byte[65535];
 		DatagramPacket linkMessage = null;
 		while(true) {
@@ -12,7 +12,6 @@ public class Server implements Runnable{
 			System.out.println("Message received: " + convertToString(receiveBuffer));
 			receiveBuffer = new byte[65535];
 		}
-		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
