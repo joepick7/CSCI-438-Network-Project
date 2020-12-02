@@ -9,7 +9,7 @@ public class Network {
 	private int configuration;
 
     public Network() {
-        String[] fileNames = {"C:\\Users\\Public\\ITC-1.txt"};
+        String[] fileNames = {};
 		this.configuration = 0;
 
 
