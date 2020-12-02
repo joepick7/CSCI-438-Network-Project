@@ -1,5 +1,6 @@
 package NetworkGraph;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class NetworkGraph {
@@ -28,7 +29,15 @@ public class NetworkGraph {
 		int hostID  = Integer.parseInt(line[0]);
 		NetworkNode focusNode = null;
 		if(!(this.containsNodeId(hostID))) {
-			NetworkNode newNode = new NetworkNode(hostID, line[1], Integer.parseInt(line[2]));
+			NetworkNode newNode = null; 
+			if(line.length == 6){
+				newNode = new NetworkNode(hostID, line[1], Integer.parseInt(line[2]), line[1]);
+			}
+			//Check line containing potential  connection scope tag.
+			if(line.length == 7) {
+				
+				newNode = new NetworkNode(hostID, line[1], Integer.parseInt(line[2]), NetworkParser.convertToIP(line[1]));
+			}
 			this.addNode(newNode);
 			focusNode = newNode;
 		}
@@ -36,7 +45,12 @@ public class NetworkGraph {
 		else {
 			focusNode = getNode(hostID);
 			if(!focusNode.isDefined()) {
-				focusNode.defineNode(line[1], Integer.parseInt(line[2]));
+				if(line.length == 6){
+					focusNode.defineNode(line[1], Integer.parseInt(line[2]), line[1]);
+				}
+				if(line.length == 7) {
+						focusNode.defineNode(line[1], Integer.parseInt(line[2]), NetworkParser.convertToIP(line[1]));
+				}
 			}
 		}
 		
@@ -115,5 +129,27 @@ public class NetworkGraph {
 		}
 		
 		return output;
+	}
+	//Return NetworkNode with specified id.
+	public NetworkNode findLocal(){
+		try{
+		InetAddress local = InetAddress.getLocalHost();
+		for(NetworkNode nn : this.nodes) {
+
+			if(nn.equalsAddress(local)) {
+				return nn;
+			}
+		}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	public int size() {
+		return this.nodes.size();
+	}
+	public ArrayList<NetworkNode> getNodes() {
+		return this.nodes;
 	}
 }
